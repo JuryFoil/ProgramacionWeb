@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #mensaje {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        #mensaje.success {
+            background-color: #d6d4ed;
+            color: #1e2d82;
+            border: 1px solid #c3cee6;
+        }
+
+        #mensaje.error {
+            background-color: #f8d7da;
+            color: #960a18;
+            border: 1px solid #f5c6cb;
+        }
+
+        form { 
+            display: flex;
+            flex-direction: column;
+            max-width: 300px;
+        }
+
+        label {
+            margin-top: 10px;
+        }
+
+        input {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #08962c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #03871b;
+        }
+    </style>
+</head>
+<body>
+    <div id="mensaje"></div>
+    <form id="productForm">
+        <label for="CodigoProducto">Código Producto</label>
+        <input name="CodigoProducto" type="number" id="CodigoProducto" required>
+
+        <label for="Nombre">Nombre</label>
+        <input name="nombre" type="text" id="Nombre" required>
+
+        <label for="Cantidad">Cantidad</label>
+        <input name="Cantidad" type="number" id="Cantidad" required>
+
+        <label for="PrecioCosto">Precio Costo</label>
+        <input type="number" name="PrecioCosto" id="PrecioCosto" required>
+
+        <label for="PrecioVenta">Precio Venta</label>
+        <input type="number" name="PrecioVenta" id="PrecioVenta" required>
+
+        <label for="PrecioMayoreo">Precio Mayoreo</label>
+        <input type="number" name="PrecioMayoreo" id="PrecioMayoreo" required>
+
+        <button type="button" onclick="Agregar()">Agregar Producto</button>
+    </form>
+
+    <script>
+    class Producto {
+        constructor(codigo, nombre, cantidad, precioCosto, precioVenta, precioMayoreo) {
+            this.codigo = codigo;
+            this.nombre = nombre;
+            this.cantidad = cantidad;
+            this.precioCosto = precioCosto;
+            this.precioVenta = precioVenta;
+            this.precioMayoreo = precioMayoreo;
+        }
+    }
+    
+    class Inventario {
+            constructor() {
+                this.productos = [];
+            }
+
+            agregarProducto(producto) {
+                let existe = false;
+                for (let i = 0; i < this.productos.length; i++) {
+                    if (this.productos[i].codigo == producto.codigo) {
+                        existe = true;
+                        break;
+                    }
+                }
+                if (!existe) {
+                    this.productos.push(producto);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        let inventario = new Inventario();
+        let NuevoProd;
+        let codigo = document.getElementById('CodigoProducto').value;
+        let nombre = document.getElementById('Nombre').value;
+        let cantidad = document.getElementById('Cantidad').value;
+        let precioCosto = document.getElementById('PrecioCosto').value;
+        let precioVenta = document.getElementById('PrecioVenta').value;
+        let precioMayoreo = document.getElementById('PrecioMayoreo').value;
+
+        function Agregar() {
+
+            NuevoProd = new Producto(codigo, nombre, cantidad, precioCosto, precioVenta, precioMayoreo);
+
+            let agregado = inventario.agregarProducto(NuevoProd);
+
+            let MensajeDiv = document.getElementById('mensaje');
+            if (agregado) {
+                MensajeDiv.textContent = 'Producto agregado con éxito.';
+                MensajeDiv.className = 'success';
+            } else {
+                MensajeDiv.textContent = 'Error: El producto ya existe.';
+                MensajeDiv.className = 'error';
+            }
+            MensajeDiv.style.display = 'block';
+
+            setTimeout(() => {
+                MensajeDiv.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
