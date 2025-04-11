@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="text-center mb-0">Inventario</h1>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form class="row g-3">
+                            <div class="col-md-6">
+                                <label for="nombreProd" class="form-label">Nombre del Producto</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
+                                    <input type="text" class="form-control" id="nombreProd" placeholder="Ingrese el nombre del producto">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="codigo" class="form-label">Código</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" class="form-control" id="codigo" placeholder="Ingrese el código">
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mt-4">
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" id="btnAgregar" class="btn btn-success"><i class="bi bi-plus-circle me-2"></i>Agregar</button>
+                                    <button type="button" id="btnEliminar" class="btn btn-danger"><i class="bi bi-trash me-2"></i>Eliminar</button>
+                                    <button type="button" id="btnListar" class="btn btn-primary"><i class="bi bi-list-ul me-2"></i>Listar</button>
+                                    <button type="button" id="btnBuscar" class="btn btn-warning text-white"><i class="bi bi-search me-2"></i>Buscar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card mt-4 shadow">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Resultados</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="divRespuesta" class="p-3 border rounded bg-white">
+                            <!-- Aquí se mostrarán los resultados -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+   <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.bundle.min.js" integrity="sha384-YUe2LzesAfftltw+PEaao2tjU/QATaW/rOitAq67e0CT0Zi2VVRL0oC4+gAaeBKu" crossorigin="anonymous"></script>
+--></body>
+</html>
