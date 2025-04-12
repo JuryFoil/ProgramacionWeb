@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        .post{
+            border: 1px solid
+        }
+        .comments{
+            border: 1px solid;
+            background-color: bisque;
+        }
+        .comment{
+            border-style: double;
+        }
+    </style>
+
+</head>
+<body>
+    <select id="users">
+        <option value="">Selecciona un usuario</option>
+    </select>
+
+    <div id="posts"></div>
+    <div id="newpost">
+
+    </div>
+
+    <script>
+        fetch('https://jsonplaceholder.typicode.com/users')
+            .then(response => response.json())
+            .then(users => {
+                let menu = document.getElementById('users');
+                users.forEach(user => {
+                    menu.innerHTML += `
+                    <option value='${user.id}'>
+                        ${user.name}
+                    </option>`;
+                });
+            });
+
+        document.getElementById('users').addEventListener('change', function() {
+            let userId = this.value;
+            let postsDiv = document.getElementById('posts');
+            let newpost=document.getElementById('newpost');
+            postsDiv.innerHTML = ''; 
+            //newpost.innerHTML ='';
+            fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`)
+                .then(response => response.json())
+                .then(posts => {
+                    posts.forEach(post => {
+                        postsDiv.innerHTML += `
+                            <div class="post" id="post${post.id}">
+                                <h3>${post.title}</h3>
+                                <button id="btnpost${post.id}" onclick='eliminarPost(${post.id})'>Eliminar Post</button>
+                                <p>${post.body}</p>
+                                <button id="btnMostrar${post.id}" onclick='verComentarios(${post.id})'>Ver Comentarios</button>
+                                <button id="btnOcultar${post.id}" onclick='ocultarComs(${post.id})' style="display: none">Ocultar Comentarios</button>
+                                <div id="comments${post.id}" class="comments"></div>
+                                </div>
+                        `;
+
+                    });
+                    newpost.innerHTML=`
+                    <form id="newPostForm">        
+                    <label for="title">Titulo</label>
+                    <input id="postTitle" name="title" type="text" required>
+                    <label for="body">Contenido</label>  
+                    <input id="postBody" name="body" type="text" required>  
+                    <button type="button" id='btnAgregar' onclick="agregarPost()">Agregar Post</button>
+                    </form>
+                        `;
+
+
+                });
+                //verComentarios(userId);
+            }
+        );
+        function agregarPost() {
+            
+            let userId = document.getElementById('users');
+            let title = document.getElementById('postTitle');
+            let body = document.getElementById('postBody');
+            
+         
+            fetch('https://jsonplaceholder.typicode.com/posts', {
+                method: 'POST',
+                body: JSON.stringify({
+                    title: title,
+                    body: body,
+                    userId: userId,
+                }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            })
+            .then((response) => response.json())
+            .then((newPost) => {
+                console.log(newPost);
+                
+                let postsDiv = document.getElementById('posts');
+                
+                postsDiv.innerHTML += `
+                    <div class="post" id="post${newPost.id}">
+                        <h3>${newPost.title}</h3>
+                        <button id="btnpost${newPost.id}" onclick='eliminarPost(${newPost.id})'>Eliminar Post</button>
+                        <p>${newPost.body}</p>
+                        <button id="btnMostrar${newPost.id}" onclick='verComentarios(${newPost.id})'>Ver Comentarios</button>
+                        <button id="btnOcultar${newPost.id}" onclick='ocultarComs(${newPost.id})' style="display: none">Ocultar Comentarios</button>
+                        <div id="comments${newPost.id}" class="comments"></div>
+                    </div>
+                ` ;
+                
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al agregar el post');
+            });
+            
+        }
+
+        
+        function verComentarios(postId) {
+            let commentsDiv = document.getElementById(`comments${postId}`);
+            let btnOcultar = document.getElementById(`btnOcultar${postId}`);
+            btnOcultar.style.display='flex';
+            let btnMostrar= document.getElementById(`btnMostrar${postId}`);
+            btnMostrar.style.display='none';
+    
+ 
+            // Fetch and display comments
+            fetch(`https://jsonplaceholder.typicode.com/comments?postId=${postId}`)
+                .then(response => response.json())
+                .then(comments => {
+                    commentsDiv.innerHTML = ''; 
+                    comments.forEach(comment => {
+                        commentsDiv.innerHTML += `
+                            <div class="comment">
+                                <h4>${comment.name}</h4>
+                                <p>${comment.email}</p>
+                                <p>${comment.body}</p>
+                            </div>
+                        `;
+                    });
+                })
+        }
+        function ocultarComs(postId) {
+            let commentsDiv = document.getElementById(`comments${postId}`);
+            commentsDiv.innerHTML = ''; 
+            let btnOcultar = document.getElementById(`btnOcultar${postId}`);
+            btnOcultar.style.display='none';
+            let btnMostrar= document.getElementById(`btnMostrar${postId}`);
+            btnMostrar.style.display='flex';
+            
+        }
+
+        function eliminarPost(postId) {
+            //let post = document.getElementById(`post${postId}`);
+            fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, {
+                method: 'DELETE',
+        })
+        .then(response => {
+                if (response.ok) {
+                    // If API deletion successful, remove from UI
+                    let postElement = document.getElementById(`post${postId}`);
+                    if (postElement) {
+                        postElement.remove();
+                    }
+                    console.log(`Post ${postId} eliminado correctamente`);
+                } else {
+                    console.error('Error al eliminar el post');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            
+        }
+    </script>
+</body>
+</html>
